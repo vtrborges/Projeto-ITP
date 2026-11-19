@@ -6,14 +6,19 @@
 
 int converte (std::string corHex) {
     int cor = 0;
-    int mult = 16;
+    char c;
 
-    for (int i = 0; i < 2; i++, mult /= 16) {
-        if ((int)corHex[i] >= 48 && (int)corHex[i] <= 57) {
-            cor += ( (int)corHex[i] - 48 ) * mult;
+    for (int i = 0; i < 2; i++) {
+        char c = corHex[i];
+
+        if (c >= '0' && c <= '9') {
+            cor = cor * 16 + (c - '0');
         }
-        else if ((int)corHex[i] >= 97 && (int)corHex[i] <= 102) {
-            cor += (10 +(int)corHex[i] - 97 ) * mult;
+        else if (c >= 'A' && c <= 'F') {
+            cor = cor * 16 + ( 10 + c - 'A' );
+        }
+        else if (c >= 'a' && c <= 'f') {
+            cor = cor * 16 + ( 10 +  c - 'a' );
         }
     }
 
@@ -59,6 +64,10 @@ Paleta::Paleta(const std::string& nomeArquivo) {
     }
 
     arquivo.close();
+}
+
+Paleta::~Paleta(){
+    delete[] cores;
 }
 
 int Paleta::obterTamanho() const {
