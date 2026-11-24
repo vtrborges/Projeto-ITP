@@ -1,100 +1,113 @@
 #include "imagem.h"
 #include <fstream>
 
-int converte (std::string numero) {
-    int valor = 0;
 
-    for (int i = 0; i < numero.length(); i++) {
-        valor = valor * 10 + (numero[i] - '0');
-    }
-
-    return valor;
-}
-
-Imagem::Imagem(): largura(0), altura(0), bitmap(nullptr) {
-
-}
-
-Imagem::Imagem(int largura, int altura){
+void Imagem::alocar(int largura, int altura) {
     this->largura = largura;
     this->altura = altura;
 
-    bitmap = new Cor*[altura];
+    if (largura > 0 && altura > 0) {
+        bitmap = new Pixel*[altura];
 
-    for (int i = 0; i < altura; i++) {
-        bitmap[i] = new Cor[largura];
-    }
+        for (int i = 0; i < altura; i++) {
+            bitmap[i] = new Pixel[largura];
+        }
 
-    for (int i = 0; i < altura; i++) {
-        for (int j = 0; j < largura; j++) {
-            bitmap[i][j] = {0, 0, 0};
+        for (int i = 0; i < altura; i++) {
+            for (int j = 0; j < largura; j++) {
+                bitmap[i][j] = {0, 0, 0};
+            }
         }
     }
+
 }
 
-Imagem::~Imagem() {
-
-    for (int i = 0; i < altura; i++) {
-        delete[] bitmap[i];
+void Imagem::liberar() {
+    
+    if (bitmap != nullptr) {
+        for (int i = 0; i < altura; i++) {
+            delete[] bitmap[i];
+        }
     }
 
     delete[] bitmap;
+    bitmap = nullptr;
 }
 
-Cor Imagem::obterPixel(int linha, int coluna) {
-    return bitmap[coluna][linha];
+Imagem::Imagem(int largura, int altura): largura(0), altura(0), bitmap(nullptr) {
+    alocar(largura, altura);
 }
 
-bool Imagem::definePixel(int linha, int coluna, Cor cor) {
 
-    if (coluna < altura && linha < largura && linha >= 0 && coluna >= 0) {
-        bitmap[coluna][linha] = cor;
+Imagem::~Imagem() {
+    liberar();
+}
+
+bool Imagem::ehPixel(int i, int j) const {
+
+    return i >= 0 && i < altura &&
+    j >= 0 && j < largura;
+};
+
+Pixel Imagem::obterPixel(int i, int j) const {
+
+    if (ehPixel(i,j)) {
+        return bitmap[j][i];
+    }
+
+    return {-1, -1, -1};
+}
+
+bool Imagem::definePixel(int i, int j, Pixel cor) {
+
+    if (ehPixel(i,j)) {
+        bitmap[j][i] = cor;
         return true;
     }
+
     return false;
 }
 
 bool Imagem::lerPPM(std::string nomeArquivo) {
-    int valorMaximo;
     std::string linha;
-    std::string dimensoes;
     std::ifstream arquivo(nomeArquivo);
-
 
     if (!arquivo.is_open()) {
         return false;
     }
 
-    if (!getline(arquivo, linha) || linha != "P3") {
+    if (!(arquivo >> linha) || linha != "P3") {
         return false;
     }
 
     int novaLargura;
     int novaAltura;
+    int valorMaximo;
+    int subpixel[3];
    
     if (!(arquivo >> novaLargura >> novaAltura >> valorMaximo)) {
         return false;
     }
 
-    for (int i = 0; i < altura; i++) {
-        delete[] bitmap[i];
-    }
-    delete[] bitmap;
+    liberar();
 
-    this->largura = novaLargura;
-    this->altura = novaAltura;
-
-    bitmap = new Cor*[novaAltura];
-
-    for (int i = 0; i < novaAltura; i++) {
-        bitmap[i] = new Cor[novaLargura];
-    }
+    alocar(novaLargura, novaAltura);
     
     for(int i = 0; i < altura; i++) {
         for(int j = 0; j < largura; j++) {
-            arquivo >> bitmap[i][j].r;
-            arquivo >> bitmap[i][j].g;
-            arquivo >> bitmap[i][j].b;
+
+            for (int k = 0; k <= 2; k++) {
+                if (!(arquivo >> subpixel[k])) {
+                    return false;
+                }
+                if (subpixel[k] < 0 || subpixel[k] > valorMaximo) {
+                    return false;
+                }
+            }
+
+            bitmap[i][j].r = subpixel[0];
+            bitmap[i][j].g = subpixel[1];
+            bitmap[i][j].b = subpixel[2];
         }
     }
 
@@ -124,10 +137,10 @@ bool Imagem::salvarPPM(const std::string &nomeArquivo) const {
     return true;
 }
 
-int Imagem::obterAltura() {
+int Imagem::obterAltura() const{
     return altura;
 }
 
-int Imagem::obterLargura() {
+int Imagem::obterLargura() const {
     return largura;
 }

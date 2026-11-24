@@ -15,19 +15,40 @@ using Pixel = Cor; // Pixel agora é outro nome para Cor, representando a cor de
 class Imagem {
     int largura;
     int altura;
-    Cor** bitmap;
+    Pixel** bitmap;
+
+private:
+
+/**
+* Aloca dinamicamente uma imagem (matriz de cores) com a largura igual ao num. de colunas 
+* e altura igual ao num. de linhas.
+* @param largura: largura da imagem (número de colunas), zero por padrão;
+* @param altura: altura da imagem (número de linhas), zero por padrão;
+*/
+    void alocar(int largura, int altura);
+
+/**
+* libera a memória alocada dinamicamente.
+*/
+    void liberar();
+
+/**
+* Função auxiliar para 'definePixel' e 'obterPixel' que verifica se um pixel está dentro dos limites de bitmap.
+* @param i: linha i da matriz;
+* @param j: coluna j da matriz;
+* @return retorna verdadeiro se o pixel está dentro dos limites da matriz bitmap e falso caso contrário.
+*/
+    bool ehPixel(int i, int j) const;
 
 public:
 
-    Imagem();
-
 /**
-* Aloca dinamicamente uma imagem (matriz de cores) com a largura e altura especificadas e com todos os pixels de cor preta.
-* {-1, -1, -1} é definido como uma cor sentinela para indicar que determinado pixel não foi preenchido. 
-* @param largura: largura da imagem (número de colunas);
-* @param altura: altura da imagem (número de linhas);
+* Construtor que aloca dinamicamente uma imagem (matriz de cores) com a largura igual ao num. de colunas 
+* e altura igual ao num. de linhas.
+* @param largura: largura da imagem (número de colunas), zero por padrão;
+* @param altura: altura da imagem (número de linhas), zero por padrão;
 */
-    Imagem(int largura, int altura);
+    Imagem(int largura = 0, int altura = 0);
 
 /**
 * Destrutor que libera a memória alocada dinamicamente.
@@ -36,24 +57,54 @@ public:
 
 /**
 * Consulta o pixel dada a coordenada na matriz.
-* @param linha;
-* @param coluna;
+* @param i: linha i da matriz;
+* @param j: coluna j da matriz;
+* @return o pixel da respectiva linha e coluna. Retorna um "pixel sentinela" definido por {-1, -1, -1} se
+* os valores de linha e coluna não estiverem dentro dos limites da matriz bitmap;
 */
-    Cor obterPixel(int linha, int coluna);
+    Pixel obterPixel(int linha, int coluna) const;
 
 /**
-* Define o pixel dada a coordenada na matriz. Retorna verdadeiro se foi possível definir a cor do pixel e falso caso contrário.
+* Define o pixel dada a coordenada na matriz.
+* @param i: linha i da matriz;
+* @param j: coluna j da matriz;
 * @param cor: a cor desejada para o pixel;
+* @return retorna verdadeiro se foi possível alterar o pixel e falso caso contrário.
 */
-    bool definePixel(int linha, int coluna, Cor cor);
+    bool definePixel(int linha, int coluna, Pixel cor);
 
+
+/**
+* Lê um arquivo e verifica se as dimensões da imagem atual condizem com o que está escrito no arquivo.
+* @param nomeArquivo: nome do arquivo que representa uma imagem ppm do qual serão extraídas as informações.
+* @return Retorna falso quando:
+* - Não foi possível ler o arquivo;
+* - Não se não se trata de um arquivo .ppm (não inicia com "P3").
+* - Os valores de largura e altura e o trio RGB de cada pixel apresentam valores incoerentes.
+* Retorna verdadeiro caso contrário.
+*/
     bool lerPPM(std::string nomeArquivo);
 
+/**
+* salva a imagem.
+* @param nomeArquivo: nome do arquivo que representa uma imagem ppm do qual serão extraídas as informações.
+* @return Retorna falso quando:
+* - Não foi possível ler o arquivo;
+* - Não se não se trata de um arquivo .ppm (não inicia com "P3").
+* - Os valores de largura e altura e o trio RGB de cada pixel apresentam valores incoerentes.
+* Retorna verdadeiro caso contrário.
+*/
     bool salvarPPM(const std::string &nomeArquivo) const;
 
-    int obterAltura();
+/**
+* @return altura da imagem.
+*/
+    int obterAltura() const;
 
-    int obterLargura();
+/**
+* @return largura da imagem.
+*/
+    int obterLargura() const;
 };
 
 // Lembre-se de:
