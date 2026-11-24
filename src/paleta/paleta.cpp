@@ -1,6 +1,5 @@
 #include "paleta.h"
 #include <fstream>
-#include <iostream>
 
 // implemente aqui os métodos da classe Paleta, conforme especificado no arquivo de cabeçalho paleta.h
 
@@ -36,7 +35,6 @@ Paleta::Paleta(const std::string& nomeArquivo) {
     std::ifstream arquivo(nomeArquivo);
 
     if (!arquivo.is_open()) {
-        std::cout << "Erro de abertura";
         tamanho = 0;
         quantidade = 0;
         cores = nullptr;
