@@ -73,6 +73,7 @@ bool Imagem::definePixel(int j, int i, Pixel cor) {
         return true;
     }
 
+    std::cerr << "pixel nao esta na matriz, li [j: " << j << "] [i: " << i << "]\n";
     return false;
 }
 
@@ -81,10 +82,12 @@ bool Imagem::lerPPM(std::string nomeArquivo) {
     std::ifstream arquivo(nomeArquivo);
 
     if (!arquivo.is_open()) {
+        std::cerr << "nao abriu: " << nomeArquivo << "\n";
         return false;
     }
 
     if (!(arquivo >> linha) || linha != "P3") {
+        std::cerr << "cabecalho invalido, li: [" << linha << "]\n";
         return false;
     }
 
@@ -94,6 +97,7 @@ bool Imagem::lerPPM(std::string nomeArquivo) {
     int subpixel[3];
    
     if (!(arquivo >> novaLargura >> novaAltura >> valorMaximo)) {
+        std::cerr << "nao leu novaLargura, novaAltura ou valorMaximo\n";
         return false;
     }
 
@@ -127,6 +131,7 @@ bool Imagem::salvarPPM(const std::string &nomeArquivo) const {
     std::ofstream arquivo(nomeArquivo);
 
         if (!arquivo.is_open()) {
+            std::cerr << "nao abriu: " << nomeArquivo << "\n";
             return false;
         }
     
