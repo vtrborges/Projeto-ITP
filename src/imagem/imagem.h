@@ -57,21 +57,21 @@ public:
 
 /**
 * Consulta o pixel dada a coordenada na matriz.
-* @param i: linha i da matriz;
 * @param j: coluna j da matriz;
+* @param i: linha i da matriz;
 * @return o pixel da respectiva linha e coluna. Retorna um "pixel sentinela" definido por {-1, -1, -1} se
 * os valores de linha e coluna não estiverem dentro dos limites da matriz bitmap;
 */
-    Pixel obterPixel(int linha, int coluna) const;
+    Pixel obterPixel(int j, int i) const;
 
 /**
 * Define o pixel dada a coordenada na matriz.
-* @param i: linha i da matriz;
 * @param j: coluna j da matriz;
+* @param i: linha i da matriz;
 * @param cor: a cor desejada para o pixel;
 * @return retorna verdadeiro se foi possível alterar o pixel e falso caso contrário.
 */
-    bool definePixel(int linha, int coluna, Pixel cor);
+    bool definePixel(int j, int i, Pixel cor);
 
 
 /**

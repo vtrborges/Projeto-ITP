@@ -47,21 +47,21 @@ bool Imagem::ehPixel(int i, int j) const {
 
     return i >= 0 && i < altura &&
     j >= 0 && j < largura;
-};
+}
 
-Pixel Imagem::obterPixel(int i, int j) const {
+Pixel Imagem::obterPixel(int j, int i) const {
 
     if (ehPixel(i,j)) {
-        return bitmap[j][i];
+        return bitmap[i][j];
     }
 
     return {-1, -1, -1};
 }
 
-bool Imagem::definePixel(int i, int j, Pixel cor) {
+bool Imagem::definePixel(int j, int i, Pixel cor) {
 
     if (ehPixel(i,j)) {
-        bitmap[j][i] = cor;
+        bitmap[i][j] = cor;
         return true;
     }
 
