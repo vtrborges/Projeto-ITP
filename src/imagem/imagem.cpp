@@ -143,8 +143,9 @@ bool Imagem::salvarPPM(const std::string &nomeArquivo) const {
         for(int j = 0; j < largura; j++) {
             arquivo << bitmap[i][j].r << " ";
             arquivo << bitmap[i][j].g << " ";
-            arquivo << bitmap[i][j].b << "\n";
+            arquivo << bitmap[i][j].b << " ";
         }
+        arquivo << "\n";
     }
 
     arquivo.close();
