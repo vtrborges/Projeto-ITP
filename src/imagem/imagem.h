@@ -76,7 +76,9 @@ public:
 
 
 /**
-* Lê um arquivo e verifica se as dimensões da imagem atual condizem com o que está escrito no arquivo.
+ * Lê uma imagem no formato PPM (P3) a partir de um arquivo. Se as dimensões da imagem no
+ * arquivo forem diferentes das da imagem atual, a imagem é redimensionada e o conteúdo
+ * anterior é descartado.
 * @param nomeArquivo: nome do arquivo que representa uma imagem ppm do qual serão extraídas as informações.
 * @return Retorna falso quando:
 * - Não foi possível ler o arquivo;
@@ -87,14 +89,11 @@ public:
     bool lerPPM(std::string nomeArquivo);
 
 /**
-* salva a imagem.
-* @param nomeArquivo: nome do arquivo que representa uma imagem ppm do qual serão extraídas as informações.
-* @return Retorna falso quando:
-* - Não foi possível ler o arquivo;
-* - Não se não se trata de um arquivo .ppm (não inicia com "P3").
-* - Os valores de largura e altura e o trio RGB de cada pixel apresentam valores incoerentes.
-* Retorna verdadeiro caso contrário.
-*/
+ * Salva a imagem em um arquivo no formato PPM (P3), com valor máximo 255. Se o arquivo já
+ * existir, ele é sobrescrito.
+ * @param nomeArquivo: nome do arquivo onde a imagem será salva.
+ * @return verdadeiro se a imagem foi salva; falso se não foi possível abrir o arquivo para escrita.
+ */
     bool salvarPPM(const std::string &nomeArquivo) const;
 
 /**
