@@ -1,12 +1,15 @@
 #include "imagem.h"
 #include <fstream>
+#include <iostream>
 
 
-void Imagem::alocar(int largura, int altura) {
-    this->largura = largura;
-    this->altura = altura;
+bool Imagem::alocar(int largura, int altura) {
 
     if (largura > 0 && altura > 0) {
+        liberar();
+        this->largura = largura;
+        this->altura = altura;
+
         bitmap = new Pixel*[altura];
 
         for (int i = 0; i < altura; i++) {
@@ -18,7 +21,12 @@ void Imagem::alocar(int largura, int altura) {
                 bitmap[i][j] = {0, 0, 0};
             }
         }
+
+        return true;
     }
+
+    std::cerr << "largura ou altura invalidas, [largura: " << largura << "] [altura: " << altura << "]\n";
+    return false;
 
 }
 
@@ -89,9 +97,10 @@ bool Imagem::lerPPM(std::string nomeArquivo) {
         return false;
     }
 
-    liberar();
-
-    alocar(novaLargura, novaAltura);
+    if (!alocar(novaLargura, novaAltura)) {
+        std::cerr << "tentou alocar com alturas e larguras invalidas\n";
+        return false;
+    }
     
     for(int i = 0; i < altura; i++) {
         for(int j = 0; j < largura; j++) {

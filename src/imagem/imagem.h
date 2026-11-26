@@ -24,8 +24,9 @@ private:
 * e altura igual ao num. de linhas.
 * @param largura: largura da imagem (número de colunas), zero por padrão;
 * @param altura: altura da imagem (número de linhas), zero por padrão;
+* @return verdadeiro se alocou; falso se as dimensões forem inválidas.
 */
-    void alocar(int largura, int altura);
+    bool alocar(int largura, int altura);
 
 /**
 * libera a memória alocada dinamicamente.
